@@ -16,5 +16,4 @@ Route::get('/employee/employeeprojects', [EmployeeController::class, 'showEmploy
 Route::delete('/employee/{id}', [EmployeeController::class, 'softDelete'])->name('employee.softDelete');
 Route::get('/employee/employeerecord', [EmployeeController::class, 'deletedEmployees'])->name('employee.record');
 
-// Route::post('/employee/{employee}/assign-project', [EmployeeController::class, 'assignProject'])->name('employee.assignProject');
-// Route::post('/employee/assign-project', [EmployeeController::class, 'assignProject'])->name('assignProject');
+Route::get('/employee/{id}', [EmployeeController::class, 'show'])->name('employee.show');

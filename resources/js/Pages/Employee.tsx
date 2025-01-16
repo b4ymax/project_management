@@ -97,7 +97,12 @@ export default function Employee({
                                             >
                                                 <div>
                                                     <p className="font-semibold">
-                                                        {employee.name}
+                                                        <a
+                                                            href={`/employee/${employee.id}`}
+                                                            className="font-semibold text-blue-600 hover:underline"
+                                                        >
+                                                            {employee.name}
+                                                        </a>
                                                     </p>
                                                     <p className="text-sm text-gray-600">
                                                         {employee.position}

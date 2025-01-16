@@ -40,7 +40,13 @@ class EmployeeController extends Controller
      */
     public function show(string $id)
     {
-        //
+        {
+            $employee = Employee::findOrFail($id);
+    
+            return Inertia::render('Employee/EmployeeDetail', [
+                'employee' => $employee,
+            ]);
+        }
     }
 
     /**
@@ -128,14 +134,5 @@ class EmployeeController extends Controller
         return inertia('Employee/EmployeeRecord', ['employees' => $employees]);
     }
 
-    // public function assignProject(Request $request)
-    // {
-    //     $employees = Employee::all();
-    //     $projects = Project::all();
-    //     $request->validate([
-    //         'project_id' => 'required|exists:projects,id',
-    //     ]);
-    //     $employee->projects()->attach($request->project_id); // Assuming a many-to-many relationship
-    //     return redirect()->route('employee.index')->with('success', 'Project assigned successfully!');
-    // }
+    
 }
