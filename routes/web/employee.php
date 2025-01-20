@@ -8,9 +8,6 @@ Route::delete('/employee/{employee}', [EmployeeController::class, 'delete'])->na
 Route::get('/employee/{employee}/edit', [EmployeeController::class, 'edit'])->name('employee.edit');
 Route::put('/employee/{employee}', [EmployeeController::class, 'update'])->name('employee.update');
 
-// Route::get('/employee/assignproject', [EmployeeController::class, 'assignProject'])->name('employee.assignProject');
-// Route::post('/employee/assign', [EmployeeController::class, 'assign'])->name('employee.assign');
-
 Route::get('/employee/employeeprojects', [EmployeeController::class, 'showEmployeeProjects'])->name('employee.projects');
 
 Route::delete('/employee/{employee}', [EmployeeController::class, 'softDelete'])->name('employee.softDelete');
