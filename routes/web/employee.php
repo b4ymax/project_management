@@ -8,12 +8,14 @@ Route::delete('/employee/{employee}', [EmployeeController::class, 'delete'])->na
 Route::get('/employee/{employee}/edit', [EmployeeController::class, 'edit'])->name('employee.edit');
 Route::put('/employee/{employee}', [EmployeeController::class, 'update'])->name('employee.update');
 
-Route::get('/employee/assignproject', [EmployeeController::class, 'assignProject'])->name('employee.assignProject');
-Route::post('/employee/assign', [EmployeeController::class, 'assign'])->name('employee.assign');
+// Route::get('/employee/assignproject', [EmployeeController::class, 'assignProject'])->name('employee.assignProject');
+// Route::post('/employee/assign', [EmployeeController::class, 'assign'])->name('employee.assign');
 
 Route::get('/employee/employeeprojects', [EmployeeController::class, 'showEmployeeProjects'])->name('employee.projects');
 
-Route::delete('/employee/{id}', [EmployeeController::class, 'softDelete'])->name('employee.softDelete');
+Route::delete('/employee/{employee}', [EmployeeController::class, 'softDelete'])->name('employee.softDelete');
 Route::get('/employee/employeerecord', [EmployeeController::class, 'deletedEmployees'])->name('employee.record');
 
-Route::get('/employee/{id}', [EmployeeController::class, 'show'])->name('employee.show');
+Route::get('/employee/{employee}', [EmployeeController::class, 'show'])->name('employee.show');
+
+Route::post('/employee/{employee}/assign', [EmployeeController::class, 'assignProject'])->name('employee.assignProject');

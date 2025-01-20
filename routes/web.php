@@ -30,7 +30,7 @@ Route::middleware('auth')->group(function () {
     require __DIR__.'/web/employee.php';
 });
 
-// Route::middleware(['auth'])->group(function () {
+// Route::middleware(['can:manager'])->group(function () {
 //     Route::get('/employee', [ProjectController::class, 'index'])->name('employee.index');
 //     Route::get('/employee/create', [EmployeeController::class, 'create'])->name('employee.createemployee');
 //     Route::post('/employee/store', [EmployeeController::class, 'store'])->name('employee.store');

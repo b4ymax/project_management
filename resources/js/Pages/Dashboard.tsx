@@ -1,8 +1,13 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link } from "@inertiajs/react";
-import PrimaryButton from "@/Components/PrimaryButton";
+import { Head } from "@inertiajs/react";
 
-export default function Dashboard() {
+interface Auth {
+    user: {
+        role: string;
+    };
+}
+
+export default function Dashboard({ auth }: { auth: Auth }) {
     return (
         <AuthenticatedLayout
             header={
@@ -21,20 +26,28 @@ export default function Dashboard() {
                         <div className="p-6 text-gray-900">
                             <p>You are logged in.</p>
 
-                            <div className="mt-6">
-                                <Link
-                                    href="/project"
-                                    className="btn bg-blue-500 text-white px-4 py-2 mr-4 rounded shadow hover:bg-blue-600"
-                                >
-                                    Projects
-                                </Link>
-
-                                <Link
-                                    href="/employee"
+                            <div className="mt-6 flex space-x-4">
+                                {/* Projects button is always visible */}
+                                <button
+                                    onClick={() =>
+                                        (window.location.href = "/project")
+                                    }
                                     className="btn bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600"
                                 >
-                                    Employees
-                                </Link>
+                                    Projects
+                                </button>
+
+                                {/* Employee button only visible for non-admin roles */}
+                                {auth.user.role !== "admin" && (
+                                    <button
+                                        onClick={() =>
+                                            (window.location.href = "/employee")
+                                        }
+                                        className="btn bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600"
+                                    >
+                                        Employees
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>

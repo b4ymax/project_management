@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Employee;
 use Inertia\Inertia;
 use App\Models\Project;
+use Illuminate\Database\Eloquent\Builder;
 
 class EmployeeController extends Controller
 {
@@ -40,13 +41,28 @@ class EmployeeController extends Controller
      */
     public function show(string $id)
     {
-        {
-            $employee = Employee::findOrFail($id);
-    
-            return Inertia::render('Employee/EmployeeDetail', [
-                'employee' => $employee,
-            ]);
-        }
+        // best way of coding
+        $employee = Employee::findOrFail($id);
+        // $unassignedProjects = Project::whereHas('employees', function (Builder $query) use ($id) {
+        //     $query->where('employees.id', '!=', $id);
+        // })->get()
+        //     ->map(fn($project) => $project->only('id','name'))
+        //     ->toArray();
+
+        // debug
+        // dd($unassignedProjects);
+
+        $unassignedProjects = Project::query()
+            // ->whereNull('employee_id')
+            ->whereNotIn('id', $employee->projects->pluck('id'))
+            ->get()
+            ->map(fn($project) => $project->only('id','name'))
+            ->toArray();
+
+        return Inertia::render('Employee/EmployeeDetail', [
+            'employee' => $employee,
+            'unassignedProjects' => $unassignedProjects, // Pass projects to the frontend
+        ]);
     }
 
     /**
@@ -81,25 +97,40 @@ class EmployeeController extends Controller
         return redirect()->route('employee.index')->with('success', 'Employee deleted successfully.');
     }
 
-    public function assignProject()
-    {
-        $employees = Employee::all();
-        $projects = Project::all();
+    // public function assignProject(Request $request, $id)
+    // {
+    //     dd($request->all());
 
-        return inertia('Employee/AssignProject', [
-            'employees' => $employees,
-            'projects' => $projects,
-        ]);
-    }
+    //     $employee = Employee::findOrFail($id);
+    //     $projectId = $request->input('project_id');
 
-    public function assign(Request $request)
+    //     // Check if the project is unassigned
+    //     $project = Project::where('id', $projectId)->first();
+
+    //     if (!$project) {
+    //         return back()->withErrors(['error' => 'Project is not available or already assigned.']);
+    //     }
+
+    //     return back()->with('success', 'Project assigned successfully!');
+    // }
+
+    // public function assignProject()
+    // {
+    //     $employees = Employee::all();
+    //     $projects = Project::all();
+
+    //     return inertia('Employee/AssignProject', [
+    //         'employees' => $employees,
+    //         'projects' => $projects,
+    //     ]);
+    // }
+
+    public function assignProject(Request $request, Employee $employee)
     {
         $validated = $request->validate([
-            'employee_id' => 'required|exists:employees,id',
             'project_id' => 'required|exists:projects,id',
         ]);
 
-        $employee = Employee::find($validated['employee_id']);
         $project = Project::find($validated['project_id']);
 
         // Assuming there is a many-to-many relationship between employees and projects
@@ -116,14 +147,11 @@ class EmployeeController extends Controller
         ]);
     }
 
-    public function softDelete($id)
+    public function softDelete(Employee $employee)
     {
-        $employee = Employee::find($id);
-        if ($employee) {
-            $employee->deleted_at = now();
-            $employee->save();
-            return response()->json(['message' => 'Employee soft-deleted successfully.'], 200);
-        }
+        $employee->delete();
+        //restore
+        //$employee->restore();
 
         return response()->json(['message' => 'Employee not found.'], 404);
     }
